@@ -4,6 +4,7 @@ import com.example.AbnAmroTask.model.SummaryEntry;
 import com.example.AbnAmroTask.model.Transaction;
 import com.example.AbnAmroTask.repository.TransactionSummaryRepository;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -19,6 +20,12 @@ import java.util.stream.Collectors;
 public class ProcessReportServiceImpl implements ProcessReportService{
 
     private final TransactionSummaryRepository transactionSummaryRepository;
+
+    @Value("${abnamrotask.outputfilename}")
+    private String filename;
+
+    @Value("${abnamrotask.summaryseparator}")
+    private String summarySeparator;
 
     public ProcessReportServiceImpl(TransactionSummaryRepository transactionSummaryRepository) {
         this.transactionSummaryRepository = transactionSummaryRepository;
@@ -71,15 +78,15 @@ public class ProcessReportServiceImpl implements ProcessReportService{
         SummaryEntry summaryEntry = new SummaryEntry();
         // Client_Information = CLIENT TYPE, CLIENT NUMBER, ACCOUNT NUMBER, SUBACCOUNT NUMBER
         summaryEntry.setClientInformation(transaction.getClientType() +
-                "_" + transaction.getClientNumber() +  // TODO separator "_" as configuration parameter
-                "_" + transaction.getAccountNumber() +
-                "_" + transaction.getSubaccountNumber());
+                summarySeparator + transaction.getClientNumber() +
+                summarySeparator + transaction.getAccountNumber() +
+                summarySeparator + transaction.getSubaccountNumber());
 
         // Product_Information = EXCHANGE CODE, PRODUCT GROUP CODE, SYMBOL, EXPIRATION DATE
         summaryEntry.setProductInformation(transaction.getExchangeCode() +
-                "_" + transaction.getProductGroupCode() +
-                "_" + transaction.getSymbol() +
-                "_" + transaction.getExpirationDate().format(DateTimeFormatter.BASIC_ISO_DATE));
+                summarySeparator + transaction.getProductGroupCode() +
+                summarySeparator + transaction.getSymbol() +
+                summarySeparator + transaction.getExpirationDate().format(DateTimeFormatter.BASIC_ISO_DATE));
 
         // Total_Transaction_Amount = Net Total of (QUANTITY LONG - QUANTITY SHORT)
         summaryEntry.setTransactionAmount(transaction.getQuantityLong() - transaction.getQuantityShort());
@@ -93,7 +100,7 @@ public class ProcessReportServiceImpl implements ProcessReportService{
     }
 
     public File generateReport() throws IOException {
-        File csvOutputFile = new File("Output.csv"); // TODO file name as parameter
+        File csvOutputFile = new File(filename);
 
         Map<String, Map<String, Integer>> sumTransactions = transactionSummaryRepository.findAll().stream()
                 .collect(Collectors.groupingBy(SummaryEntry::getClientInformation,

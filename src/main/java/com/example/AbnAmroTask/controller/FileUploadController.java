@@ -1,6 +1,7 @@
 package com.example.AbnAmroTask.controller;
 
 import com.example.AbnAmroTask.service.ProcessReportService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -20,6 +21,9 @@ public class FileUploadController {
 
     private final ProcessReportService processReportService;
 
+    @Value("${abnamrotask.outputfilename}")
+    private String filename;
+
     public FileUploadController(ProcessReportService processReportService) {
         this.processReportService = processReportService;
     }
@@ -34,7 +38,7 @@ public class FileUploadController {
         File outputFile = processReportService.generateReport();
 
         return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=Output.csv") // TODO file name as parameter
+                .header("Content-Disposition", "attachment; filename=" + filename)
                 .contentLength(outputFile.length())
                 .contentType(MediaType.parseMediaType("text/csv"))
                 .body(new FileSystemResource(outputFile));
