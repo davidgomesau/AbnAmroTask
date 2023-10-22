@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class ProcessReportServiceImpl implements ProcessReportService{
+public class ProcessReportServiceImpl implements ProcessReportService {
 
     private final TransactionSummaryRepository transactionSummaryRepository;
 
