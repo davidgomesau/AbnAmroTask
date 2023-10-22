@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>AbnAmroTask</artifactId>
+	<artifactId>abnamro-task</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>AbnAmroTask</name>
 	<description>Interview task for ABN Amro</description>
