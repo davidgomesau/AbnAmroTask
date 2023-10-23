@@ -1,0 +1,14 @@
+<div class="text-center">
+  <input class="form-control" type="file" (change)="onChange($event)" />
+
+  <button (click)="onUpload()" class="btn btn-success">Upload</button>
+</div>
+
+<div class="container text-center jumbotron" *ngIf="outFile">
+  <h2>Transaction Summary Report</h2>
+  {{ outFile }}
+</div>
+
+<div class="container" *ngIf="loading">
+  <h3>Loading ...</h3>
+</div>
