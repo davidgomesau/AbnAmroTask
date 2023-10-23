@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+
+  frontend:
+    image: file-upload-app:latest
+    ports:
+      - '4200:4200'
+
+  backend:
+    image: abnamro-task:0.0.1-SNAPSHOT
+    ports:
+      - '8080:8080'
+
